@@ -281,12 +281,21 @@ void Vector_Complex::sortare_vector()
 {
     Vector_Complex v(m_vector_complex, m_lungime_vector);
     double* v_module = v.vector_modul();
+    double aux;
+    Complex aux1;
 
     for (int i = 0; i < m_lungime_vector - 1; i ++)
         for (int j = i + 1; j < m_lungime_vector; j ++){
             if (v_module[j] < v_module[i]){
-                swap(v_module[j], v_module[i]);
-                swap(m_vector_complex[j], m_vector_complex[i]);
+                aux = v_module[j];
+                v_module[j] = v_module[i];
+                v_module[i] = aux;
+                //swap(v_module[j], v_module[i]); Nu a functionat pe alte compilatoare, nu stiu de ce
+
+                aux1 = m_vector_complex[j];
+                m_vector_complex[j] = m_vector_complex[i];
+                m_vector_complex[i] = aux1;
+                //swap(m_vector_complex[j], m_vector_complex[i]); Nu a functionat pe alte compilatoare, nu stiu de ce
             }
         }
 }
