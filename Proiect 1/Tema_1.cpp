@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include <vector>
 using namespace std;
 
 class Vector_Complex;
@@ -131,7 +132,7 @@ void readNComplexNumbers()
 
     cout << "Scrie " << n << " numere complexe:" << endl;
 
-    Complex *numbers = new Complex[n];
+    Complex* numbers = new Complex[n];
     for (int i = 0; i < n; i ++){
         //citim numerele
         cin >> numbers[i];
@@ -163,6 +164,13 @@ public:
 
     Vector_Complex(Complex a[], int lungime): m_lungime_vector(lungime) //Cpnstructor pentru a initializa un Vector_Complex
     {                                                                   //dintr-un vector de tip Complex si lungimea sa
+        for (int i = 0; i < lungime; i ++){
+            m_vector_complex[i] = a[i];
+        }
+    }
+
+    Vector_Complex(int lungime, Complex a[]): m_lungime_vector(lungime) //Cpnstructor pentru a initializa un Vector_Complex
+    {                                                                   //din lungimea unui vector si vectorul respectiv de tip Complex
         for (int i = 0; i < lungime; i ++){
             m_vector_complex[i] = a[i];
         }
@@ -222,10 +230,11 @@ public:
         return out;
     }
 
+    Complex suma_el_vector(); //Metoda pentru a afisa suma tuturor elementelor din vectorul apelat
 
-    // TO DO: modulul unui vector
-    // TO DO: sortare crescator dupa modul
-    // TO DO: suma tuturor elementelor
+    double* vector_modul(); //Metoda care returneaza un array dinamic reprezentand vectorul modulelor unui vector
+
+    void sortare_vector();  //Metoda de sortare a vectorului dupa vectorul modulelor
 };
 
 void readNComplexVectors()
@@ -235,7 +244,7 @@ void readNComplexVectors()
     cin >> nr_vectori;
     cout << endl;
 
-    Vector_Complex *vectori = new Vector_Complex[nr_vectori];
+    Vector_Complex* vectori = new Vector_Complex[nr_vectori];
     for (int i = 0; i < nr_vectori; i ++){
         cin >> vectori[i];
     }
@@ -244,13 +253,124 @@ void readNComplexVectors()
     for (int i = 0; i < nr_vectori; i++){
         if (vectori[i].GetLungime_Vector() != 0) //daca este vector nul, atunci nu se mai afiseaza cele 2 end lines
             cout << vectori[i] << endl << endl;
+        else
+            cout << "Vector vid\n\n";
+    }
+}
+
+Complex Vector_Complex::suma_el_vector()
+{
+    Complex resultat;
+    for (int i = 0; i < m_lungime_vector; i ++){
+        resultat = resultat + m_vector_complex[i];
     }
 
+    return resultat;
+}
+
+double* Vector_Complex::vector_modul()
+{
+    double *v_module = new double[m_lungime_vector];
+    for (int i = 0; i < m_lungime_vector; i ++)
+        v_module[i] = m_vector_complex[i].Abs();
+
+    return v_module;
+}
+
+void Vector_Complex::sortare_vector()
+{
+    Vector_Complex v(m_vector_complex, m_lungime_vector);
+    double* v_module = v.vector_modul();
+
+    for (int i = 0; i < m_lungime_vector - 1; i ++)
+        for (int j = i + 1; j < m_lungime_vector; j ++){
+            if (v_module[j] < v_module[i]){
+                swap(v_module[j], v_module[i]);
+                swap(m_vector_complex[j], m_vector_complex[i]);
+            }
+        }
 }
 
 
+//Meniu interactiv
+
+void afisare_optiuni()
+{
+    cout << "1. Citire, memorare si afisare a n vectori de tip Complex:\n";
+    cout << "2. Citire si memorare a unui vector de tip Complex:\n";
+    cout << "3. Afisare suma elementelor din vectorul dat cu ajutorul optiunii 2:\n";
+    cout << "4. Afisare a vectorului de module corespunzator vectorului dat cu ajutorul optiunii 2:\n";
+    cout << "5. Sortare a vectorului dat cu ajutorul optiunii 2 dupa modul:\n";
+    cout << "6. Stergere a vectorului dat la optiunea 2 si citirea si memorarea a unui nou vector de tip Complex:\n";
+    cout << "7. Afisarea vectorului:\n";
+    cout << "0. Oprire program.\n\n";
+}
+
+void meniu_interactiv()
+{
+    cout << "Alegeti urmatoarele optiuni:\n\n";
+    afisare_optiuni();
+
+    int optiune = 0;
+    Complex suma;
+    Vector_Complex v;
+
+    cin >> optiune;
+    cout << endl;
+
+    while (optiune != 0){
+        if (optiune == 1)
+            readNComplexVectors();
+
+        else if (optiune == 2 || optiune == 6){
+            cin >> v;
+            cout << "Ati memorat vectorul cu succes!\n\n";
+        }
+
+        else if (optiune == 3){
+            if (v.GetLungime_Vector() > 0){
+                suma = v.suma_el_vector();
+                cout << "Suma tuturor elementelor din vector este: " << suma << endl << endl;
+            }
+            else
+                cout << "Nu a fost dat niciun vector!\n\n";
+        }
+
+        else if (optiune == 4){
+            if (v.GetLungime_Vector() > 0){
+                for (int i = 0; i < v.GetLungime_Vector(); i ++)
+                    cout << v.vector_modul()[i] << "; ";
+                cout << endl  << endl;
+            }
+            else
+                cout << "Nu a fost dat niciun vector!\n\n";
+        }
+
+        else if (optiune == 5){
+            if (v.GetLungime_Vector() > 0){
+                v.sortare_vector();
+                cout << "Vectorul a fost sortat!\n\n";
+            }
+            else
+                cout << "Nu a fost dat niciun vector!\n\n";
+        }
+
+        else if (optiune == 7)
+            cout << "Vectorul este:\n\n" << v;
+
+
+        //Se afiseaza din nou optiunile si se citeste optiunea.
+        cout << "Alegeti urmatoarele optiuni:\n\n";
+        afisare_optiuni();
+
+        cin >> optiune;
+        cout << endl;
+    }
+}
+
 int main()
 {
-    readNComplexVectors();
+    meniu_interactiv();
+
     return 0;
 }
