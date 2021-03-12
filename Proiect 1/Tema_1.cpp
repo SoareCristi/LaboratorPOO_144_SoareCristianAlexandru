@@ -358,6 +358,9 @@ void meniu_interactiv()
         else if (optiune == 7)
             cout << "Vectorul este:\n\n" << v;
 
+        else
+            cout << "Optiune necunoscuta!! \n\n";
+
 
         //Se afiseaza din nou optiunile si se citeste optiunea.
         cout << "Alegeti urmatoarele optiuni:\n\n";
