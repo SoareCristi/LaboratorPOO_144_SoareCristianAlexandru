@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cmath>
-#include <vector>
+//#include <vector>
 using namespace std;
 
 class Vector_Complex;
@@ -185,7 +185,7 @@ public:
 
     //Destructor
     ~Vector_Complex(){
-        m_lungime_vector = 0;
+        //m_lungime_vector = 0;
     }
 
     //Getteri
@@ -258,6 +258,24 @@ void readNComplexVectors()
     }
 }
 
+Vector_Complex* DemoReadNComplexVectors(int nr_vectori)
+{
+    Vector_Complex* vectori = new Vector_Complex[nr_vectori];
+    for (int i = 0; i < nr_vectori; i ++){
+        cin >> vectori[i];
+    }
+
+    cout << "Ai memorat urmatorii " << nr_vectori << " vectori:" << endl;
+    for (int i = 0; i < nr_vectori; i++){
+        if (vectori[i].GetLungime_Vector() != 0) //daca este vector nul, atunci nu se mai afiseaza cele 2 end lines
+            cout << vectori[i] << endl << endl;
+        else
+            cout << "Vector vid\n\n";
+    }
+
+    return vectori;
+}
+
 Complex Vector_Complex::suma_el_vector()
 {
     Complex resultat;
@@ -279,8 +297,8 @@ double* Vector_Complex::vector_modul()
 
 void Vector_Complex::sortare_vector()
 {
-    Vector_Complex v(m_vector_complex, m_lungime_vector);
-    double* v_module = v.vector_modul();
+    //Vector_Complex v(m_vector_complex, m_lungime_vector);
+    double* v_module = this->vector_modul();
     double aux;
     Complex aux1;
 
@@ -312,6 +330,9 @@ void afisare_optiuni()
     cout << "5. Sortare a vectorului dat cu ajutorul optiunii 2 dupa modul:\n";
     cout << "6. Stergere a vectorului dat la optiunea 2 si citirea si memorarea a unui nou vector de tip Complex:\n";
     cout << "7. Afisarea vectorului:\n";
+    cout << "8. Demo citire, memorare si afisare a n vectori de tip Complex:\n";
+    cout << "9. Afisare suma fiecarui vector dat cu ajutorul optiunii 8:\n";
+    cout << "10. Afisare vectorii de module ai celor n vectori dati cu ajutorul optiunii 8:\n";
     cout << "0. Oprire program.\n\n";
 }
 
@@ -320,9 +341,11 @@ void meniu_interactiv()
     cout << "Alegeti urmatoarele optiuni:\n\n";
     afisare_optiuni();
 
-    int optiune = 0;
+    int optiune = 0, nr_vectori_demo = 0;
+    double* demo_vector_modul;
     Complex suma;
     Vector_Complex v;
+    Vector_Complex* n_vectori;
 
     cin >> optiune;
     cout << endl;
@@ -367,6 +390,34 @@ void meniu_interactiv()
         else if (optiune == 7)
             cout << "Vectorul este:\n\n" << v;
 
+        else if (optiune == 8){
+            cout << "Numarul de vectori de tip complex de citit:\n";
+            cin >> nr_vectori_demo;
+            cout << endl;
+            n_vectori = DemoReadNComplexVectors(nr_vectori_demo);
+        }
+
+        else if (optiune == 9){
+            if (nr_vectori_demo > 0)
+                for (int i = 0; i < nr_vectori_demo; i ++){
+                    suma = n_vectori[i].suma_el_vector();
+                    cout << "Suma tuturor elementelor din vectorul " << i << " este: " <<  suma << endl;
+                }
+            else
+                cout << "Nu au fost dati n vectori cu ajutorul optiunii 8!\n\n";
+        }
+
+        else if (optiune == 10){
+            if (nr_vectori_demo > 0)
+                for (int i = 0; i < nr_vectori_demo; i ++){
+                    for (int j = 0; j < n_vectori[i].GetLungime_Vector(); j ++)
+                        cout << n_vectori[i].vector_modul()[j] << "; ";
+                        cout << endl  << endl;
+                }
+            else
+                cout << "Nu au fost dati n vectori cu ajutorul optiunii 8!\n\n";
+        }
+
         else
             cout << "Optiune necunoscuta!! \n\n";
 
@@ -378,6 +429,7 @@ void meniu_interactiv()
         cin >> optiune;
         cout << endl;
     }
+    delete[] n_vectori;
 }
 
 int main()
